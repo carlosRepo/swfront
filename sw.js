@@ -21,6 +21,7 @@ const saveSubscription = async (subscription) => {
             body: JSON.stringify(subscription)
         });
         return response.json();
+
     } catch (error) {
         alert('Error saving subscription:', error)
         console.error('Error saving subscription:', error);

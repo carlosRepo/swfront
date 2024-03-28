@@ -30,5 +30,6 @@ const main = async () => {
     checkPermission()
     await requestNotificationPermission()
     await registerSW()
+    alert("listo")
 }
 

@@ -10,7 +10,6 @@ const urlBase64ToUint8Array = base64String => {
     for (let i = 0; i < rawData.length; ++i) {
         outputArray[i] = rawData.charCodeAt(i);
     }
-
     return outputArray;
 }
 
@@ -20,7 +19,6 @@ const saveSubscription = async (subscription) => {
         headers: { 'Content-type': "application/json" },
         body: JSON.stringify(subscription)
     })
-
     return response.json()
 }
 
@@ -29,11 +27,10 @@ self.addEventListener("activate", async (e) => {
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array("BEBFFsXHqgfoAwWbrUWlArMwPoFytZkZPoxIiJEoxDcGk7DvhEokMtwSiJiUY3p-TuQIyJW-jdcov1L1UMrCizk")
     })
-
     const response = await saveSubscription(subscription)
     console.log(response)
 })
 
 self.addEventListener("push", e => {
-    self.registration.showNotification("Wohoo!!", { body: e.data.text() })
+    self.registration.showNotification("titulo desde front", { body: e.data.text() })
 })

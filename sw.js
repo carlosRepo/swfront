@@ -14,23 +14,34 @@ const urlBase64ToUint8Array = base64String => {
 }
 
 const saveSubscription = async (subscription) => {
-    const response = await fetch('https://serviceworkertest.onrender.com/save-subscription', {
-        method: 'post',
-        headers: { 'Content-type': "application/json" },
-        body: JSON.stringify(subscription)
-    })
-    return response.json()
+    try {
+        const response = await fetch('https://serviceworkertest.onrender.com/save-subscription', {
+            method: 'post',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(subscription)
+        });
+        return response.json();
+    } catch (error) {
+        alert('Error saving subscription:', error)
+        console.error('Error saving subscription:', error);
+        throw new Error('Failed to save subscription');
+    }
 }
 
-self.addEventListener("activate", async (e) => {
-    const subscription = await self.registration.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array("BEBFFsXHqgfoAwWbrUWlArMwPoFytZkZPoxIiJEoxDcGk7DvhEokMtwSiJiUY3p-TuQIyJW-jdcov1L1UMrCizk")
-    })
-    const response = await saveSubscription(subscription)
-    console.log(response)
-})
+self.addEventListener('activate', async (e) => {
+    try {
+        const subscription = await self.registration.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: urlBase64ToUint8Array("BEBFFsXHqgfoAwWbrUWlArMwPoFytZkZPoxIiJEoxDcGk7DvhEokMtwSiJiUY3p-TuQIyJW-jdcov1L1UMrCizk")
+        });
+        const response = await saveSubscription(subscription);
+        console.log(response);
+    } catch (error) {
+        console.error('Error subscribing:', error);
+    }
+});
 
-self.addEventListener("push", e => {
-    self.registration.showNotification("titulo desde front", { body: e.data.text() })
-})
+self.addEventListener('push', e => {
+    const data = e.data.json();
+    self.registration.showNotification(data.title, { body: data.body });
+});
